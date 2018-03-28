@@ -104,7 +104,7 @@ def loadgra(filename):
     for line in f.readlines():
         edge = line.strip().split(' ')
         (src, dst) = (int(edge[0]), int(edge[1]))
-        g.addedge(src, dst, multi=multigraph)
+        g.addedge(src, dst)
     f.close()
     return g
 
