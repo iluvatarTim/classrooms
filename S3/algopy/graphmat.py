@@ -83,7 +83,7 @@ def display(G, eng=None):
 
 # load / save gra format    
 
-def loadgra(filename, multigraph=False):
+def loadgra(filename):
     """Build a new graph from a GRA file.
 
     Args:
