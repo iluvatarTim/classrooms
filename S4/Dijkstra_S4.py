@@ -28,7 +28,7 @@ def chooseMin(dist, M):
             mini = dist[i]
     return x
     
-def Dijkstra(G, src):
+def Dijkstra0(G, src):
     dist = [inf] * G.order
     dist[src] = 0
     p = [-1] * G.order    
@@ -91,16 +91,74 @@ def Dijkstra2(G, src, dst = None):
 # Optimization: Dijkstra with a heap 
     
 from algopy import heap_spe as heap
-    
+
+def Dijkstra(G, src):
+    dist = [inf] * G.order
+    dist[src] = 0
+    p = [-1] * G.order    
+    H = heap.Heap(G.order)
+    H.push(src, 0)
+    while not H.isEmpty():
+        (_, x) = H.pop()  
+        for y in G.adjlists[x]:
+            if dist[x] + G.costs[(x, y)] < dist[y]:
+                dist[y] = dist[x] + G.costs[(x, y)]
+                p[y] = x
+                H.update(y, dist[y])
+    return (dist, p)
+
 def Dijkstra_withoutM(G, src, dst, M):
     '''
     src != dst
     dst is reachable from src
-    the shortest path between src and dst without vertices in M
+    the shortest path between src and dst 
+    without vertices in M
     '''
-    #FIXME
-    pass
+    dist = [inf] * G.order
+    dist[src] = 0
+    p = [-1] * G.order    
+    H = heap.Heap(G.order)
+    x = src
+    while x != dst:
+        for y in G.adjlists[x]:
+            if not M[y] and \
+                    dist[x] + G.costs[(x, y)] < dist[y]:
+                dist[y] = dist[x] + G.costs[(x, y)]
+                p[y] = x
+                H.update(y, dist[y])
+        (_, x) = H.pop()  
+    return (dist, p)
 
 def there_and_back(G, src, dst):
-    #FIXME
-    pass
+    """
+    returns the path (int list) and the cost
+    """
+    M = [False] * G.order
+    (dist, p) = Dijkstra_withoutM(G, src, dst, M)
+    
+    path = [dst]
+    x = p[dst]
+    while p[x] != -1:
+        path.insert(0, x)
+        M[x] = True
+        x = p[x]
+    path.insert(0, src)
+    cost = dist[dst]
+    
+    (dist, p) = Dijkstra_withoutM(G, dst, src, M)
+    
+    path2 = [src]
+    x = p[src]
+    while x != dst:
+        path2.insert(0, x)
+        x = p[x]
+    
+    return (path + path2, cost + dist[src])
+
+    
+    
+    
+    
+    
+    
+    
