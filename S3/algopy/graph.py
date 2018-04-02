@@ -71,7 +71,7 @@ class Graph:
         for _ in range(number):
             self.adjlists.append([])
 
-def todot(G):
+def todot(ref):
     """Write down dot format of graph.
 
     Args:
@@ -82,8 +82,21 @@ def todot(G):
 
     """
 
-    #FIXME
-
+    # Check if empty graph.
+    if ref is None:
+        return "graph G { }"
+    # Build dot for non-empty graph.
+    (s, link) = ("digraph ", " -> ") if ref.directed else ("graph ", " -- ")
+    s += " G {\n"
+    s += "node [shape = circle]\n"
+    for src in range(ref.order):
+        s += str(src) + '\n'
+        for dst in ref.adjlists[src]:
+            cost = ' [label=' + str(ref.costs[(src, dst)]) + '] ' if ref.costs else ""
+            if ref.directed or src >= dst:
+                s += "  " + str(src) + link + str(dst) + cost + '\n'
+    s += '}'
+    return s
 
 def display(G, eng=None):
     """

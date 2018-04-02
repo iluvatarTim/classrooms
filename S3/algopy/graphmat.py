@@ -55,18 +55,32 @@ class GraphMat:
 
 
 
-def todot(G):
+def todot(ref):
     """Write down dot format of graph.
 
     Args:
-        GraphMat
+        ref (GraphMat)
 
     Returns:
         str: String storing dot format of graph.
 
     """
 
-    #FIXME
+    # Check if empty graph.
+    if ref is None:
+        return "graph G { }"
+    # Build dot for non-empty graph.
+    (s, link) = ("digraph", " -> ") if ref.directed else ("graph", " -- ")
+    s += " G {\n"
+    s += "node [shape = circle]\n"
+    for src in range(ref.order):
+        for dst in range(ref.order):
+            if ref.directed or src >= dst:
+                for i in range(ref.adj[src][dst]):
+                    s += "  " + str(src) + link + str(dst) + '\n'
+    s += '}'
+    return s
+    
 
 def display(G, eng=None):
     """
