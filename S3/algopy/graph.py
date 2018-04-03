@@ -88,13 +88,12 @@ def todot(ref):
     # Build dot for non-empty graph.
     (s, link) = ("digraph ", " -> ") if ref.directed else ("graph ", " -- ")
     s += " G {\n"
-    s += "node [shape = circle]\n"
+    s += "node [shape = circle]\n"  # this line can be removed
     for src in range(ref.order):
-        s += str(src) + '\n'
+        s += str(src) + '\n'        # add each vertex to the dot (in case of isolated vertex: it appears 
         for dst in ref.adjlists[src]:
-            cost = ' [label=' + str(ref.costs[(src, dst)]) + '] ' if ref.costs else ""
             if ref.directed or src >= dst:
-                s += "  " + str(src) + link + str(dst) + cost + '\n'
+                s += "  " + str(src) + link + str(dst) + '\n'
     s += '}'
     return s
 
