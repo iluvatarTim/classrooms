@@ -67,7 +67,7 @@ class Graph:
             self.adjlists[src].append(dst)
             if not self.directed and dst != src:
                 self.adjlists[dst].append(src)
-        if cost:
+        if cost is not None:
             self.costs[(src, dst)] = cost
             if not self.directed:
                 self.costs[(dst, src)] = cost
@@ -214,10 +214,8 @@ def load_weightedgraph(filename, costType = float):
     for line in f.readlines():
         edge = line.strip().split(' ')
         (x, y, cost) = (int(edge[0]), int(edge[1]), costType(edge[2]))
-        G.addedge(x, y)
-        G.costs[(x, y)] = cost
-        if not G.directed:
-            G.costs[(y, x)] = cost
+        G.addedge(x, y, cost)
+    
     f.close()
     for i in range(G.order):
         G.adjlists[i].sort()
